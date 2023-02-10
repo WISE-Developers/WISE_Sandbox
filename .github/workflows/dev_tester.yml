@@ -1,0 +1,19 @@
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        projects: ["drools", "jbpm", "kie-jpmml-integration", "optaplanner", "droolsjbpm-integration", "optaweb-employee-rostering", "optaweb-vehicle-routing"]
+    steps:
+      - name: "Checkout ${{ matrix.projects }}"
+        uses: actions/checkout@v2
+        with:
+          repository: kiegroup/${{ matrix.projects }}
+          ref: # Somehow we get the branch to checkout from env variables
+      - name: "Setup Java for ${{ matrix.projects }}"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: "Execute Maven for ${{ matrix.projects }}"
+        run: # mvn whatever goals and profiles...
